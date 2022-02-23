@@ -1,0 +1,141 @@
+@import url('https://rsms.me/inter/inter.css');
+
+.date-picker {
+    user-select: none;
+    font-family: "Inter", sans-serif;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    color: #000;
+    border-radius: 4px;
+    box-shadow: 0px 0.7px 0.4px rgba(0, 0, 0, 0.025),
+                0px 1.6px 1.1px rgba(0, 0, 0, 0.036),
+                0px 3px 2px rgba(0, 0, 0, 0.045),
+                0px 5.4px 3.6px rgba(0, 0, 0, 0.054),
+                0px 10px 6.7px rgba(0, 0, 0, 0.065),
+                0px 24px 16px rgba(0, 0, 0, 0.09);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    header, .page-controls {
+        display: flex;
+        align-items: center;
+    }
+    &.view- {
+        &days td {
+            block-size: 36px;
+        }
+        &months td,
+        &years td {
+            block-size: 64px;
+        }
+    }
+    header {
+        padding: 4px;
+        border-block-end: 1px solid rgba(0, 0, 0, 0.1);
+        inline-size: calc(100% - 8px);
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 4px;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+            &:active {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            &:disabled {
+                pointer-events: none;
+            }
+            svg {
+                fill: currentColor;
+                inline-size: 16px;
+                block-size: 16px;
+            }
+        }
+    }
+    .header-text {
+        flex: 1 1 auto;
+        button {
+            justify-content: flex-start;
+            text-align: left;
+            inline-size: 100%;
+            flex: 1 1 auto;
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+            &:active {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            &:disabled {
+                pointer-events: none;
+            }
+        }
+    }
+    .page-controls {
+        flex: 0 0 auto;
+        button {
+            margin-inline-start: 4px;
+        }
+    }
+    table {
+        margin: 8px;
+        inline-size: 276px;
+        table-layout: fixed;
+        font-size: 13px;
+        border-spacing: 4px;
+        td {
+            margin: 1px;
+            padding: 0;
+            font-size: 12px;
+            text-align: center;
+            border-radius: 50px;
+            transition: 50ms ease;
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+            &:active {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            &[disabled="true" i] {
+                cursor: not-allowed;
+                opacity: .25 !important;
+                background: rgba(0, 0, 0, 0.25);
+            }
+            &.current-date {
+                color: #2c5fcb;
+                background-color: rgba(44, 95, 203, 0.1);
+                &:hover {
+                    background-color: rgba(44, 95, 203, 0.15);
+                }
+                &:active {
+                    background-color: rgba(44, 95, 203, 0.2);
+                }
+            }
+            &.selected {
+                background-color: #2c5fcb;
+                color: #fff;
+                &:hover {
+                    background-color: #426fd0;
+                }
+                &:active {
+                    background-color: #567fd5;
+                }
+            }
+            &.out-of-range {
+                opacity: 0.5;
+            }
+        }
+        th {
+            padding-block: 4px 8px;
+        }
+    }
+}

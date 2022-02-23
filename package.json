@@ -1,0 +1,27 @@
+{
+  "name": "sveltekit-package-template",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "svelte-kit dev",
+    "build": "svelte-kit build",
+    "preview": "svelte-kit preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+    "package": "svelte-kit package"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "next",
+    "autoprefixer": "^10.4.2",
+    "cssnano": "^5.0.17",
+    "postcss": "^8.4.6",
+    "sass": "^1.49.8",
+    "svelte": "^3.46.4",
+    "svelte-check": "^2.4.5",
+    "svelte-preprocess": "^4.10.3",
+    "svelte2tsx": "^0.4.14",
+    "tabbable": "^5.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.5"
+  },
+  "type": "module"
+}
