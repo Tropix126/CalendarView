@@ -7,6 +7,7 @@
     export let min: Date = undefined;
     export let max: Date = undefined;
     export let view: View = "days";
+    export let weekStart = 0;
     
     const firstValue = Array.isArray(value) ? value[0] : value;
 
@@ -22,6 +23,7 @@
     interface WeekdayLocaleOptions {
         locale?: string;
         format?: DateTimeWeekdayFormat;
+        offset?: number;
     }
 
     interface MonthLocaleOptions {
@@ -36,10 +38,11 @@
         ArrowRight: number;
     }
 	
-	function getWeekdayLocale(day: number, { locale = undefined, format = "long" }: WeekdayLocaleOptions = {}) {
+	function getWeekdayLocale(day: number, { locale = undefined, format = "long", offset = 0 }: WeekdayLocaleOptions = {}) {
 		return new Intl.DateTimeFormat(locale, {
-			weekday: format
-		}).format(new Date(Date.UTC(2000, 1, day)));
+			weekday: format,
+            timeZone: 'UTC'
+		}).format(new Date(Date.UTC(2000, 1, (day + weekStart - 1))));
 	}
 	
 	function getMonthLocale(month: number, { locale = undefined, format = "long" }: MonthLocaleOptions = {}) {
@@ -99,7 +102,7 @@
 		let nextMonthYear = year;
         let lastMonthYear = year;
 
-        const daysBefore = (firstWeekday + 7) % 7;
+        const daysBefore = (firstWeekday - weekStart + 7) % 7;
 		if (daysBefore > 0) {
             if (lastMonth === -1) {
                 lastMonth = 11;
@@ -168,11 +171,21 @@
         page = new Date(getPageByOffset(value, page, view));
     }
 
-    function handleKeyDown({ key }: KeyboardEvent, date: Date) {
+    function handleKeyDown(event: KeyboardEvent, date: Date) {
         let focusOrder = focusable(bodyElement);
         let focusedDate = date;
-        
+
         const focusIndex = focusOrder.indexOf(<HTMLElement>document.activeElement);
+        const { key } = event;
+
+        if (event.ctrlKey && key === "ArrowUp" || key === "ArrowDown") {
+            if (key === "ArrowUp") {
+                view = view === "days" ? "months" : "years";
+            } else if (key === "ArrowDown") {
+                view = view === "years" ? "months" : "days";
+            }
+            return;
+        }
         
         if (view === "days") {
             const focusIncrementAmount: FocusIncrementAmount = {
@@ -330,7 +343,7 @@
             <thead>
                 <tr>
                     {#each Array(7) as _, day}
-                        <th scope="col" {...{abbr: getWeekdayLocale(day, { locale })}}>{getWeekdayLocale(day, { locale, format: "short" })}</th>
+                        <th scope="col" {...{abbr: getWeekdayLocale(day, { locale, offset: weekStart })}}>{getWeekdayLocale(day, { locale, format: "short", offset: weekStart })}</th>
                     {/each}
                 </tr>
             </thead>
