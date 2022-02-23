@@ -178,7 +178,7 @@
         const focusIndex = focusOrder.indexOf(<HTMLElement>document.activeElement);
         const { key } = event;
 
-        if (event.ctrlKey && key === "ArrowUp" || key === "ArrowDown") {
+        if (event.ctrlKey && (key === "ArrowUp" || key === "ArrowDown")) {
             if (key === "ArrowUp") {
                 view = view === "days" ? "months" : "years";
             } else if (key === "ArrowDown") {
