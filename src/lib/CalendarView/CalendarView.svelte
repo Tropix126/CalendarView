@@ -1,6 +1,8 @@
 <script lang="ts">
     import { focusable } from "tabbable";
 
+    import CalendarViewItem from "./CalendarViewItem.svelte";
+
 	export let locale: string = undefined;
     export let multiple = false;
     export let value: Date | Date[] | null = null;
@@ -195,7 +197,6 @@
                 ArrowRight: 1
             }
             
-            if (key === "Enter" || key === " ") selectDay(focusedDate);
             if (!focusIncrementAmount[key]) return;
             
             focusedDate = new Date(new Date(focusedDate).setDate(focusedDate.getDate() + focusIncrementAmount[key]));
@@ -229,7 +230,6 @@
                 ArrowRight: 1
             }
 
-            if (key === "Enter" || key === " ") view === "months" ? selectMonth(date) : selectYear(date);
             if (!focusIncrementAmount[key]) return;
             
             if (view === "months") {
@@ -320,7 +320,7 @@
     }
 </script>
 
-<div class="date-picker view-{view}">
+<div class="calendar-view view-{view}">
     <header>
         <div class="header-text" role="heading" aria-live="polite">
             <button on:click={() => view = view === "days" ? "months" : "years"} disabled={view === "years"}>{header}</button>
@@ -340,77 +340,84 @@
     </header>
     <table class="calendar-table" role="grid">
         {#if view === "days"}
-            <thead>
-                <tr>
+            <thead role="rowgroup">
+                <tr role="row">
                     {#each Array(7) as _, day}
-                        <th scope="col" {...{abbr: getWeekdayLocale(day, { locale, offset: weekStart })}}>{getWeekdayLocale(day, { locale, format: "short", offset: weekStart })}</th>
+                        <th scope="col" {...{abbr: getWeekdayLocale(day, { locale, offset: weekStart })}}>
+                            {getWeekdayLocale(day, { locale, format: "short", offset: weekStart })}
+                        </th>
                     {/each}
                 </tr>
             </thead>
-            <tbody bind:this={bodyElement}>
+            <tbody role="rowgroup" bind:this={bodyElement}>
                 {#each Array(6) as _, week}
-                    <tr>
+                    <tr role="row">
                         {#each getCalendarDays(page).slice((week * 7), (week * 7) + 7) as day, i}
                             {@const selected = value !== null && (Array.isArray(value) ? indexOfDate(value, day, "day") > -1 : compareDates(value, day, "day"))}
                             {@const inMonth = day.getMonth() === page.getMonth()}
-                            <td
-                                on:click={() => selectDay(day)}
-                                on:keydown={e => handleKeyDown(e, day)}
-                                tabindex={-1}
-                                class:selected
-                                class:current-date={compareDates(day, new Date(), "day")}
-                                class:out-of-range={!inMonth}
-                                aria-selected={selected}
-                                disabled={(min > day) || (max < day)}
-                            >
-                                {day.getDate()}
+                            
+                            <td role="gridcell">
+                                <CalendarViewItem
+                                    on:click={() => selectDay(day)}
+                                    on:keydown={e => handleKeyDown(e, day)}
+                                    tabindex={-1}
+                                    outOfRange={!inMonth}
+                                    current={compareDates(day, new Date(), "day")}
+                                    disabled={(min > day) || (max < day)}
+                                    {selected}
+                                >
+                                    {day.getDate()}
+                                </CalendarViewItem>
                             </td>
                         {/each}
                     </tr>
                 {/each}
             </tbody>
-            {:else if view === "months"}
-            <tbody bind:this={bodyElement}>
+            {:else}
+            <tbody role="rowgroup" bind:this={bodyElement}>
                 {#each Array(4) as _, row}
-                    <tr>
-                        {#each getCalendarMonths(page).slice((row * 4), (row * 4) + 4) as month, i}
-                            {@const selected = value !== null && (Array.isArray(value) ? indexOfDate(value, month, "month") > -1 : compareDates(value, month, "month"))}
-                            {@const inYear = month.getFullYear() === page.getFullYear()}
+                    <tr role="row">
+                        {#if view === "months"}
+                            {#each getCalendarMonths(page).slice((row * 4), (row * 4) + 4) as month, i}
+                                {@const selected = value !== null && (Array.isArray(value) ? indexOfDate(value, month, "month") > -1 : compareDates(value, month, "month"))}
+                                {@const inYear = month.getFullYear() === page.getFullYear()}
+                                
+                                <td role="gridcell">
+                                    <CalendarViewItem
+                                        on:click={() => selectMonth(month)}
+                                        on:keydown={e => handleKeyDown(e, month)}
+                                        variant="monthYear"
+                                        tabindex={-1}
+                                        outOfRange={!inYear}
+                                        current={compareDates(month, new Date(), "month")}
+                                        disabled={((min?.getMonth() > month.getMonth()) && min?.getFullYear() === month.getFullYear()) || (max < month)}
+                                        {selected}
+                                    >
+                                        {getMonthLocale(month.getMonth(), { locale, format: "short" })}
+                                    </CalendarViewItem>
+                                </td>
+                            {/each}
+                            {:else if view === "years"}
+                            {#each getCalendarYears(page).slice((row * 4), (row * 4) + 4) as year, i}
+                                {@const selected = value !== null && (Array.isArray(value) ? indexOfDate(value, year, "year") > -1 : compareDates(value, year, "year"))}
+                                {@const inDecade = compareDates(year, page, "decade")}
 
-                            <td
-                                on:keydown={e => handleKeyDown(e, month)}
-                                on:click={() => selectMonth(month)}
-                                tabindex={-1}
-                                class:out-of-range={!inYear}
-                                class:current-date={compareDates(month, new Date(), "month")}
-                                class:selected
-                                disabled={((min?.getMonth() > month.getMonth()) && min?.getFullYear() === month.getFullYear()) || (max < month)}
-                            >
-                                {getMonthLocale(month.getMonth(), { locale, format: "short" })}
-                            </td>
-                        {/each}
-                    </tr>
-                {/each}
-            </tbody>
-            {:else if view === "years"}
-            <tbody bind:this={bodyElement}>
-                {#each Array(4) as _, row}
-                    <tr>
-                        {#each getCalendarYears(page).slice((row * 4), (row * 4) + 4) as year, i}
-                            {@const selected = value !== null && (Array.isArray(value) ? indexOfDate(value, year, "year") > -1 : compareDates(value, year, "year"))}
-                            {@const inDecade = compareDates(year, page, "decade")}
-                            <td
-                                on:keydown={e => handleKeyDown(e, year)}
-                                on:click={() => selectYear(year)}
-                                tabindex={-1}
-                                class:out-of-range={!inDecade}
-                                class:current-date={year.getFullYear() === new Date().getFullYear()}
-                                class:selected
-                                disabled={(min?.getFullYear() > year.getFullYear()) || (max < year)}
-                            >
-                                {year.getFullYear()}
-                            </td>
-                        {/each}
+                                <td role="gridcell">
+                                    <CalendarViewItem
+                                        on:click={() => selectYear(year)}
+                                        on:keydown={e => handleKeyDown(e, year)}
+                                        variant="monthYear"
+                                        tabindex={-1}
+                                        outOfRange={!inDecade}
+                                        current={year.getFullYear() === new Date().getFullYear()}
+                                        disabled={(min?.getFullYear() > year.getFullYear()) || (max < year)}
+                                        {selected}
+                                    >
+                                        {year.getFullYear()}
+                                    </CalendarViewItem>
+                                </td>
+                            {/each}
+                        {/if}
                     </tr>
                 {/each}
             </tbody>

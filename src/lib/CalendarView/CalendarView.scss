@@ -1,6 +1,6 @@
 @import url('https://rsms.me/inter/inter.css');
 
-.date-picker {
+.calendar-view {
     user-select: none;
     font-family: "Inter", sans-serif;
     display: inline-flex;
@@ -18,23 +18,20 @@
                 0px 24px 16px rgba(0, 0, 0, 0.09);
     border: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    &.view- {   
+        &months table, &years table {
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 20px;
+        }
+    }
     header, .page-controls {
         display: flex;
         align-items: center;
     }
-    &.view- {
-        &days td {
-            block-size: 36px;
-        }
-        &months td,
-        &years td {
-            block-size: 64px;
-        }
-    }
     header {
         padding: 4px;
         border-block-end: 1px solid rgba(0, 0, 0, 0.1);
-        inline-size: calc(100% - 8px);
+        inline-size: 100%;
         button {
             display: flex;
             justify-content: center;
@@ -87,56 +84,17 @@
         }
     }
     table {
-        margin: 8px;
-        inline-size: 276px;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-gap: 2px;
+        padding: 8px;
         table-layout: fixed;
         font-size: 13px;
-        border-spacing: 4px;
-        td {
-            margin: 1px;
-            padding: 0;
-            font-size: 12px;
-            text-align: center;
-            border-radius: 50px;
-            transition: 50ms ease;
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.05);
-            }
-            &:active {
-                background-color: rgba(0, 0, 0, 0.1);
-            }
-            &[disabled="true" i] {
-                pointer-events: none;
-                // cursor: not-allowed;
-                opacity: .25 !important;
-                background: rgba(0, 0, 0, 0.25);
-            }
-            &.current-date {
-                color: #2c5fcb;
-                background-color: rgba(44, 95, 203, 0.1);
-                &:hover {
-                    background-color: rgba(44, 95, 203, 0.15);
-                }
-                &:active {
-                    background-color: rgba(44, 95, 203, 0.2);
-                }
-            }
-            &.selected {
-                background-color: #2c5fcb;
-                color: #fff;
-                &:hover {
-                    background-color: #426fd0;
-                }
-                &:active {
-                    background-color: #567fd5;
-                }
-            }
-            &.out-of-range {
-                opacity: 0.5;
-            }
-        }
         th {
             padding-block: 4px 8px;
+        }
+        tr, thead, tbody {
+            display: contents;
         }
     }
 }

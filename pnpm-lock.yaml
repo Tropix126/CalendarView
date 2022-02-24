@@ -4,7 +4,6 @@ specifiers:
   '@sveltejs/kit': next
   autoprefixer: ^10.4.2
   cssnano: ^5.0.17
-  pnpm: ^6.32.1
   postcss: ^8.4.6
   sass: ^1.49.8
   svelte: ^3.46.4
@@ -15,11 +14,8 @@ specifiers:
   tslib: ^2.3.1
   typescript: ^4.5.5
 
-dependencies:
-  pnpm: 6.32.1
-
 devDependencies:
-  '@sveltejs/kit': 1.0.0-next.283_sass@1.49.8+svelte@3.46.4
+  '@sveltejs/kit': 1.0.0-next.285_sass@1.49.8+svelte@3.46.4
   autoprefixer: 10.4.2_postcss@8.4.6
   cssnano: 5.0.17_postcss@8.4.6
   postcss: 8.4.6
@@ -63,8 +59,8 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.283_sass@1.49.8+svelte@3.46.4:
-    resolution: {integrity: sha512-QFhL7cdBKXUKhJ3sHZnL7q07Eohc54N7OpX2ZsJuNTA43Z6vX/HF/Jh4TK62kqT+thDVlT5J1iEEMppxA2IxoQ==}
+  /@sveltejs/kit/1.0.0-next.285_sass@1.49.8+svelte@3.46.4:
+    resolution: {integrity: sha512-JwWnCDRJJRWuUWYjvNnjaJjBP4/zarZyL3PnVZQ6cX08CBhd3qfIe+lcdvdUrj+lP+HjSutkX2kEB3dsza9PKg==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -887,12 +883,6 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
     dev: true
-
-  /pnpm/6.32.1:
-    resolution: {integrity: sha512-vca5B8nbIHSCEIaV7UG1C15v54txazI9u3HhQ0OJad2u8DSzBaFnWiHN7D6EoDg6t5bu/yC1/lShtt+0uFJXFg==}
-    engines: {node: '>=12.17'}
-    hasBin: true
-    dev: false
 
   /postcss-calc/8.2.4_postcss@8.4.6:
     resolution: {integrity: sha512-SmWMSJmB8MRnnULldx0lQIyhSNvuDl9HfrZkaqqE/WHAhToYsAvDq+yAsA/kIyINDszOp3Rh0GFoNuH5Ypsm3Q==}
