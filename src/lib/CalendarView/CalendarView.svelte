@@ -1,5 +1,6 @@
 <script lang="ts">
     import { focusable } from "tabbable";
+    import { createEventDispatcher, createeventDispatcher } from "svelte";
 
     import CalendarViewItem from "./CalendarViewItem.svelte";
 
@@ -12,6 +13,7 @@
     export let weekStart = 0;
     
     const firstValue = Array.isArray(value) ? value[0] : value;
+    const dispatch = createEventDispatcher();
 
     let header = "";
     let page = new Date((firstValue ?? new Date()).getFullYear(), (firstValue ?? new Date()).getMonth(), 1);
@@ -297,6 +299,7 @@
         view = "months";
     }
 
+    $: dispatch("change", value);
     $: view, updatePage(0); // ensures that data is in sync when comparing min/max values
     $: previousPage = getPageByOffset(-1, page, view);
     $: nextPage = getPageByOffset(1, page, view);
