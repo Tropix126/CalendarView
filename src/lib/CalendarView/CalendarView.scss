@@ -1,6 +1,8 @@
 @import url('https://rsms.me/inter/inter.css');
 
 .calendar-view {
+    inline-size: 298px;
+    block-size: 356px;
     user-select: none;
     font-family: "Inter", sans-serif;
     display: inline-flex;
@@ -87,7 +89,6 @@
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         grid-gap: 2px;
-        padding: 8px;
         table-layout: fixed;
         font-size: 13px;
         th {

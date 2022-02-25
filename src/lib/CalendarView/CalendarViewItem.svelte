@@ -52,8 +52,8 @@
                 block-size: 38px;
             }
             &month-year {
-                inline-size: 54px;
-                block-size: 54px;
+                inline-size: 56px;
+                block-size: 56px;
             }
         }
         &.current {
