@@ -1,11 +1,11 @@
 <script lang="ts">
     export let selected = false;
     export let disabled = false;
+    export let blackout = false;
     export let current = false;
     export let outOfRange = false;
     export let variant: "day" | "monthYear" = "day";
     export let header = "";
-    export let blackout = false;
 </script>
 
 <button
@@ -45,6 +45,9 @@
             cursor: not-allowed;
             opacity: 0.25 !important;
             background: rgba(0, 0, 0, 0.25);
+        }
+        &.blackout {
+            background-color: red;
         }
         &.variant- {
             &day {

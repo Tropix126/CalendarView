@@ -33,7 +33,10 @@
         padding: 4px;
         border-block-end: 1px solid rgba(0, 0, 0, 0.1);
         inline-size: 100%;
+        padding: 8px;
         button {
+            padding: 0;
+            min-block-size: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,7 +46,6 @@
             border-radius: 4px;
             border: none;
             background: transparent;
-            padding: 8px;
             &:hover {
                 background-color: rgba(0, 0, 0, 0.05);
             }
@@ -63,9 +65,10 @@
     .header-text {
         flex: 1 1 auto;
         button {
+            inline-size: 100%;
+            padding-inline: 8px;
             justify-content: flex-start;
             text-align: left;
-            inline-size: 100%;
             flex: 1 1 auto;
             &:hover {
                 background-color: rgba(0, 0, 0, 0.05);
@@ -81,6 +84,8 @@
     .page-controls {
         flex: 0 0 auto;
         button {
+            padding: 0;
+            inline-size: 30px;
             margin-inline-start: 4px;
         }
     }

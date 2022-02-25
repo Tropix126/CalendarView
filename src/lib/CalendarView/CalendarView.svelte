@@ -7,6 +7,7 @@
 	export let locale: string = undefined;
     export let multiple = false;
     export let value: Date | Date[] | null = null;
+    export let blackout: Date[] = undefined;        
     export let min: Date = undefined;
     export let max: Date = undefined;
     export let view: View = "days";
@@ -363,10 +364,11 @@
                                 <CalendarViewItem
                                     on:click={() => selectDay(day)}
                                     on:keydown={e => handleKeyDown(e, day)}
-                                    tabindex={day.getDate() === 1 ? 1 : -1}
+                                    tabindex={-1}
                                     outOfRange={!inMonth}
                                     current={compareDates(day, new Date(), "day")}
                                     disabled={(min > day) || (max < day)}
+                                    blackout={blackout && indexOfDate(blackout, day, "day") > -1}
                                     {selected}
                                 >
                                     {day.getDate()}
