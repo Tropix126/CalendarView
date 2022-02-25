@@ -1,6 +1,6 @@
 <script lang="ts">
     import { focusable } from "tabbable";
-    import { createEventDispatcher, createeventDispatcher } from "svelte";
+    import { createEventDispatcher } from "svelte";
 
     import CalendarViewItem from "./CalendarViewItem.svelte";
 
