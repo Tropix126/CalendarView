@@ -343,8 +343,8 @@
     </header>
     <table class="calendar-table" role="grid">
         {#if view === "days"}
-            <thead role="rowgroup">
-                <tr role="row">
+            <thead>
+                <tr>
                     {#each Array(7) as _, day}
                         <th scope="col" {...{abbr: getWeekdayLocale(day, { locale, offset: weekStart })}}>
                             {getWeekdayLocale(day, { locale, format: "short", offset: weekStart })}
@@ -352,9 +352,9 @@
                     {/each}
                 </tr>
             </thead>
-            <tbody role="rowgroup" bind:this={bodyElement}>
+            <tbody bind:this={bodyElement}>
                 {#each Array(6) as _, week}
-                    <tr role="row">
+                    <tr>
                         {#each getCalendarDays(page).slice((week * 7), (week * 7) + 7) as day, i}
                             {@const selected = value !== null && (Array.isArray(value) ? indexOfDate(value, day, "day") > -1 : compareDates(value, day, "day"))}
                             {@const inMonth = day.getMonth() === page.getMonth()}
@@ -363,7 +363,7 @@
                                 <CalendarViewItem
                                     on:click={() => selectDay(day)}
                                     on:keydown={e => handleKeyDown(e, day)}
-                                    tabindex={-1}
+                                    tabindex={day.getDate() === 1 ? 1 : -1}
                                     outOfRange={!inMonth}
                                     current={compareDates(day, new Date(), "day")}
                                     disabled={(min > day) || (max < day)}
@@ -377,9 +377,9 @@
                 {/each}
             </tbody>
             {:else}
-            <tbody role="rowgroup" bind:this={bodyElement}>
+            <tbody bind:this={bodyElement}>
                 {#each Array(4) as _, row}
-                    <tr role="row">
+                    <tr>
                         {#if view === "months"}
                             {#each getCalendarMonths(page).slice((row * 4), (row * 4) + 4) as month, i}
                                 {@const selected = value !== null && (Array.isArray(value) ? indexOfDate(value, month, "month") > -1 : compareDates(value, month, "month"))}
