@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { focusable } from "tabbable";
     import { createEventDispatcher } from "svelte";
 
     import CalendarViewItem from "./CalendarViewItem.svelte";
@@ -47,7 +46,7 @@
 		return new Intl.DateTimeFormat(locale, {
 			weekday: format,
             timeZone: 'UTC'
-		}).format(new Date(Date.UTC(2000, 1, (day + weekStart - 1))));
+		}).format(new Date(Date.UTC(2000, 1, (day + offset - 1))));
 	}
 	
 	function getMonthLocale(month: number, { locale = undefined, format = "long" }: MonthLocaleOptions = {}) {
@@ -177,10 +176,6 @@
     }
 
     function handleKeyDown(event: KeyboardEvent, date: Date) {
-        let focusOrder = focusable(bodyElement);
-        let focusedDate = date;
-
-        const focusIndex = focusOrder.indexOf(<HTMLElement>document.activeElement);
         const { key } = event;
 
         if (event.ctrlKey && (key === "ArrowUp" || key === "ArrowDown")) {
@@ -191,9 +186,16 @@
             }
             return;
         }
+
+        let focusOrder = bodyElement.querySelectorAll("button");
+        let focusedDate = date;
+
+        const focusIndex = Array.from(focusOrder).indexOf(<HTMLButtonElement>document.activeElement);
+
+        if (focusOrder.length === 0) return;
         
         if (view === "days") {
-            const focusIncrementAmount: FocusIncrementAmount = {
+            let focusIncrementAmount: FocusIncrementAmount = {
                 ArrowUp: -7,
                 ArrowDown: 7,
                 ArrowLeft: -1,
@@ -204,8 +206,14 @@
             
             focusedDate = new Date(new Date(focusedDate).setDate(focusedDate.getDate() + focusIncrementAmount[key]));
 
+            const nextDateIsBlackout = indexOfDate(blackout, focusedDate, "day") > -1;
+
+            if (nextDateIsBlackout) {
+                focusedDate.setDate(focusedDate.getDate() + focusIncrementAmount[key]);
+            }
+
             const calendarDays = getCalendarDays(focusedDate);
-            const newFocusedDate = calendarDays.find(day => day.getTime() === focusedDate.getTime());
+            const newFocusedDate = calendarDays.find(day => compareDates(day, focusedDate, "time"));
     
             if ((min > newFocusedDate) || (max < newFocusedDate)) return;
 
@@ -217,13 +225,13 @@
                 }
     
                 focusedDate = newFocusedDate;
-                focusOrder = focusable(bodyElement);
+                focusOrder = bodyElement.querySelectorAll("button");
                 focusOrder?.[calendarDays.indexOf(newFocusedDate)].focus();
                 
                 return;
             }
             
-            focusOrder?.[focusIndex + focusIncrementAmount[key]].focus();
+            focusOrder?.[focusIndex + focusIncrementAmount[key] * (nextDateIsBlackout ? 2 : 1)].focus();
         } else if (view === "months" || view === "years") {
             let calendar: Date[] = [];
             const focusIncrementAmount: FocusIncrementAmount = {
@@ -242,11 +250,14 @@
             }
 
             calendar = view === "months" ? getCalendarMonths(focusedDate) : getCalendarYears(focusedDate);
-            const newFocusedDate = calendar.find(day => view === "months" ? compareDates(day, focusedDate, "month") : day.getFullYear() === focusedDate.getFullYear());
+            const newFocusedDate = calendar.find(day => compareDates(day, focusedDate, view === "months" ? "month" : "year"));
 
-            if ((view === "months" && ((min?.getMonth() > newFocusedDate.getMonth()) && (min?.getFullYear() === newFocusedDate.getFullYear())) || (view === "years" && (min?.getFullYear() > newFocusedDate.getFullYear())) || (max < newFocusedDate))) return;
+            const aboveMinimumMonths = min?.getMonth() > newFocusedDate.getMonth() && min?.getFullYear() === newFocusedDate.getFullYear(); 
+            const aboveMinimumYears = min?.getFullYear() > newFocusedDate.getFullYear();
 
-            if ((view === "months" && (focusedDate.getFullYear() !== page.getFullYear()) || (view === "years" && !compareDates(focusedDate, page, "decade")))) {
+            if ((view === "months" ? aboveMinimumMonths : aboveMinimumYears) || (max < newFocusedDate)) return;
+
+            if ((view === "months" && (!compareDates(focusedDate, page, view === "months" ? "year" : "decade")))) {
                 if ((key === "ArrowLeft" || key === "ArrowUp")) {
                     updatePage(-1);
                 } else if ((key === "ArrowRight" || key === "ArrowDown")) {
@@ -254,7 +265,7 @@
                 }
     
                 focusedDate = newFocusedDate;
-                focusOrder = focusable(bodyElement);
+                focusOrder = bodyElement.querySelectorAll("button");
                 focusOrder?.[calendar.indexOf(newFocusedDate)].focus();
                 
                 return;
@@ -414,7 +425,7 @@
                                         variant="monthYear"
                                         tabindex={-1}
                                         outOfRange={!inDecade}
-                                        current={year.getFullYear() === new Date().getFullYear()}
+                                        current={compareDates(year, new Date(), "year")}
                                         disabled={(min?.getFullYear() > year.getFullYear()) || (max < year)}
                                         {selected}
                                     >
