@@ -206,7 +206,7 @@
             
             focusedDate = new Date(new Date(focusedDate).setDate(focusedDate.getDate() + focusIncrementAmount[key]));
 
-            const nextDateIsBlackout = indexOfDate(blackout, focusedDate, "day") > -1;
+            const nextDateIsBlackout = blackout && indexOfDate(blackout, focusedDate, "day") > -1;
 
             if (nextDateIsBlackout) {
                 focusedDate.setDate(focusedDate.getDate() + focusIncrementAmount[key]);
@@ -442,5 +442,5 @@
 </div>
 
 <style lang="scss">
-    @use "./CalendarView.scss";
+    @use "./CalendarView";
 </style>
